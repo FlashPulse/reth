@@ -1,9 +1,10 @@
-use reth_chainspec::{ChainSpec, DEV, HOLESKY, HOODI, MAINNET, SEPOLIA};
+use reth_chainspec::{ChainSpec, DEV, HOLESKY, HOODI, MAINNET, PULSECHAIN_MAINNET, SEPOLIA};
 use reth_cli::chainspec::{parse_genesis, ChainSpecParser};
 use std::sync::Arc;
 
 /// Chains supported by reth. First value should be used as the default.
-pub const SUPPORTED_CHAINS: &[&str] = &["mainnet", "sepolia", "holesky", "hoodi", "dev"];
+pub const SUPPORTED_CHAINS: &[&str] =
+    &["mainnet", "pulsechain_mainnet", "sepolia", "holesky", "hoodi", "dev"];
 
 /// Clap value parser for [`ChainSpec`]s.
 ///
@@ -12,6 +13,7 @@ pub const SUPPORTED_CHAINS: &[&str] = &["mainnet", "sepolia", "holesky", "hoodi"
 pub fn chain_value_parser(s: &str) -> eyre::Result<Arc<ChainSpec>, eyre::Error> {
     Ok(match s {
         "mainnet" => MAINNET.clone(),
+        "pulsechain_mainnet" => PULSECHAIN_MAINNET.clone(),
         "sepolia" => SEPOLIA.clone(),
         "holesky" => HOLESKY.clone(),
         "hoodi" => HOODI.clone(),

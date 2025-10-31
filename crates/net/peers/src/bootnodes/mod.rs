@@ -14,6 +14,16 @@ pub fn mainnet_nodes() -> Vec<NodeRecord> {
     parse_nodes(&MAINNET_BOOTNODES[..])
 }
 
+/// Returns parsed pulsechain mainnet nodes
+pub fn pulsechain_mainnet_nodes() -> Vec<NodeRecord> {
+    parse_nodes(&PULSECHAIN_BOOTNODES[..])
+}
+
+/// Returns parsed pulsechain testnet nodes
+pub fn pulsechain_testnet_nodes() -> Vec<NodeRecord> {
+    parse_nodes(&PULSECHAIN_TESTNET_BOOTNODES[..])
+}
+
 /// Returns parsed sepolia nodes
 pub fn sepolia_nodes() -> Vec<NodeRecord> {
     parse_nodes(&SEPOLIA_BOOTNODES[..])

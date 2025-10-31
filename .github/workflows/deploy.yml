@@ -1,0 +1,72 @@
+name: Deploy Program To Server
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: Git commit sha, on which, to run this workflow
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ inputs.commit_sha }}
+
+    - uses: Swatinem/rust-cache@v2.7.7
+      with:
+        prefix-key: 'bots'
+        cache-on-failure: true
+
+    - name: Build binary
+      run: |
+        cargo build --release --bin reth
+        mkdir -p binaries
+        cp target/release/reth binaries/
+
+    - name: Upload binary to server
+      run: |
+        set -ex
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > secret_key
+        chmod 600 secret_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+
+        ip="88.198.63.105"
+        ips=(${ip})
+        ip_count=${#ips[@]}
+        echo "Number of IP addresses: $ip_count"
+
+        counter=0
+
+        for ip in "${ips[@]}"; do
+          counter=$((counter + 1))
+          ssh-keyscan $ip >> ~/.ssh/known_hosts
+
+          # Create directory if doesn't exist
+          ssh -i secret_key root@${ip} "mkdir -p ~/binaries"
+      
+          rsync -avz --progress -e "ssh -i secret_key" \
+            binaries/pulsechain root@${ip}:~/binaries
+
+          if [ $? -eq 0 ]; then
+            echo "Successfully uploaded to $ip"
+          else
+            echo "Failed to upload to $ip"
+            exit 1
+          fi
+
+          ssh root@${ip} -i secret_key "tmux kill-session -t reth" || true
+          ssh root@${ip} -i secret_key "tmux new-session -d -s reth \"cd ~/binaries && ./pulsechain; exec bash\""
+
+          echo "Started pulsechain_arbitrage in tmux session for $ip"
+        done
+
+        rm -rf ~/.ssh
+        rm -rf secret_key

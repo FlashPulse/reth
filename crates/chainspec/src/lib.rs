@@ -18,6 +18,7 @@ pub use constants::*;
 mod api;
 /// The chain info module.
 mod info;
+mod pulse_spec;
 /// The chain spec module.
 mod spec;
 
@@ -27,14 +28,14 @@ pub use reth_ethereum_forks::*;
 
 pub use api::EthChainSpec;
 pub use info::ChainInfo;
+pub use pulse_spec::PULSECHAIN_MAINNET;
+use reth_primitives_traits::sync::OnceLock;
 #[cfg(any(test, feature = "test-utils"))]
 pub use spec::test_fork_ids;
 pub use spec::{
     make_genesis_header, BaseFeeParams, BaseFeeParamsKind, ChainSpec, ChainSpecBuilder,
     ChainSpecProvider, DepositContract, ForkBaseFeeParams, DEV, HOLESKY, HOODI, MAINNET, SEPOLIA,
 };
-
-use reth_primitives_traits::sync::OnceLock;
 
 /// Simple utility to create a thread-safe sync cell with a value set.
 pub fn once_cell_set<T>(value: T) -> OnceLock<T> {
