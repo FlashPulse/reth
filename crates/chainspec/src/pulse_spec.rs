@@ -7,7 +7,10 @@ use alloy_primitives::{address, b256, U256};
 use reth_ethereum_forks::{hardfork, EthereumHardfork, ForkCondition, Hardfork};
 use reth_primitives_traits::SealedHeader;
 
-use crate::{make_genesis_header, ChainSpec, DepositContract, MAINNET_PRUNE_DELETE_LIMIT};
+use crate::{
+    make_genesis_header, ChainSpec, DepositContract, MAINNET_DEPOSIT_CONTRACT,
+    MAINNET_PRUNE_DELETE_LIMIT,
+};
 
 hardfork!(
     #[derive(Default)]
@@ -135,9 +138,9 @@ pub static PULSECHAIN_MAINNET: LazyLock<Arc<ChainSpec>> = LazyLock::new(|| {
     spec.into()
 });
 
-/// Deposit contract address: `0x00000000219ab540356cbb839cbe05303d7705fa`
-const MAINNET_DEPOSIT_CONTRACT: DepositContract = DepositContract::new(
-    address!("0x3693693693693693693693693693693693693693"),
-    11052984,
-    b256!("0x649bbc62d0e31342afea4e5cd82d4049e7e1ee912fc0889aa790803be39038c5"),
-);
+// /// Deposit contract address: `0x00000000219ab540356cbb839cbe05303d7705fa`
+// const MAINNET_DEPOSIT_CONTRACT: DepositContract = DepositContract::new(
+//     address!("0x3693693693693693693693693693693693693693"),
+//     11052984,
+//     b256!("0x649bbc62d0e31342afea4e5cd82d4049e7e1ee912fc0889aa790803be39038c5"),
+// );

@@ -16,6 +16,7 @@ pub fn mainnet_nodes() -> Vec<NodeRecord> {
 
 /// Returns parsed pulsechain mainnet nodes
 pub fn pulsechain_mainnet_nodes() -> Vec<NodeRecord> {
+    println!("Using pulsechain boot nodes");
     parse_nodes(&PULSECHAIN_BOOTNODES[..])
 }
 
